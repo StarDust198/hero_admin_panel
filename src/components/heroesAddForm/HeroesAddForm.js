@@ -1,4 +1,8 @@
+import { v4 as uuidv4 } from 'uuid';
 
+const {heroes, heroesLoadingStatus} = useSelector(state => state);
+const dispatch = useDispatch();
+const {request} = useHttp();
 
 // Задача для этого компонента:
 // Реализовать создание нового героя с введенными данными. Он должен попадать
