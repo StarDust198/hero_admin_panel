@@ -11,3 +11,18 @@
 ul {
     padding: 0;
 }
+
+.hero-item-enter {
+    opacity: 0;
+}
+.hero-item-enter-active {
+    opacity: 1;
+    transition: opacity 1000ms;
+}
+.hero-item-exit {
+    opacity: 1;
+}
+.hero-item-exit-active {
+    opacity: 0;
+    transition: opacity 1000ms;
+}
