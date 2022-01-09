@@ -1,5 +1,5 @@
 import {useHttp} from '../../hooks/http.hook';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Formik } from 'formik';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,15 +17,32 @@ import { addHero } from '../../actions';
 // данных из фильтров
 
 const HeroesAddForm = () => {
+    const {filters} = useSelector(state => state);
     const dispatch = useDispatch();
     const {request} = useHttp();
 
     const createHero = async(values) => {
         values.id = uuidv4()
         await request(`http://localhost:3001/heroes/`, 'POST', JSON.stringify(values))
-            .then(dispatch(addHero(values)))
-            // .catch(dispatch(heroesFetchingError))  
+            .then(dispatch(addHero(values))) 
     }
+
+    const renderOptions = (arr) => {
+        if (arr.length === 0) {
+            return <option value="">Идёт загрузка...</option>
+        }        
+
+        return arr
+            .map(({id, element, label}) => {
+                if (element === 'all') {
+                    return <option key={id} value="">Я владею элементом...</option>
+                } else {
+                    return <option value={element} key={id}>{label}</option>
+                }                
+            })
+    }
+    
+    const options = (renderOptions(filters))
 
     return (
         <Formik
@@ -103,11 +120,12 @@ const HeroesAddForm = () => {
                             onChange={handleChange}
                             onBlur={handleBlur}
                             value={values.element}>
-                            <option value="">Я владею элементом...</option>
+                                {options}
+                            {/* <option value="">Я владею элементом...</option>
                             <option value="fire">Огонь</option>
                             <option value="water">Вода</option>
                             <option value="wind">Ветер</option>
-                            <option value="earth">Земля</option>
+                            <option value="earth">Земля</option> */}
                         </select>
                         {errors.element && touched.element && errors.element}
                     </div>

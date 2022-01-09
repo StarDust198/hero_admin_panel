@@ -12,7 +12,7 @@ import Spinner from '../spinner/Spinner';
 // Удаление идет и с json файла при помощи метода DELETE
 
 const HeroesList = () => {
-    const {heroes, heroesLoadingStatus} = useSelector(state => state);
+    const {heroes, heroesLoadingStatus, filterActive} = useSelector(state => state);
     const dispatch = useDispatch();
     const {request} = useHttp();
 
@@ -34,26 +34,19 @@ const HeroesList = () => {
     const deleteHero = (id) => {
         request(`http://localhost:3001/heroes/${id}`, 'DELETE')
             .then(dispatch(removeHero(id)))
-/*             .catch(dispatch(heroesFetchingError))      */ 
     }
 
     const renderHeroesList = (arr) => {
         if (arr.length === 0) {
             return <h5 className="text-center mt-5">Героев пока нет</h5>
-        }
+        }        
 
-        return arr.map(({id, ...props}) => {
-            return <HeroesListItem removeHero={() => deleteHero(id)} key={id} {...props}/>
-        })
+        return arr
+            .filter(hero => hero.element === filterActive || filterActive === 'all')
+            .map(({id, ...props}) => {
+                return <HeroesListItem removeHero={() => deleteHero(id)} key={id} {...props}/>
+            })
     }
-
-    // console.log(heroes);
-    // request("http://localhost:3001/heroes", 'POST', JSON.stringify({
-    //     "id": 333,
-    //     "name": "Морской герой2",
-    //     "description": "Как аквамен, но не из DC2",
-    //     "element": "water"
-    // }))    
 
     const elements = renderHeroesList(heroes);
     return (
