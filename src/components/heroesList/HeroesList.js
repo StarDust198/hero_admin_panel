@@ -33,7 +33,8 @@ const HeroesList = () => {
     
     const deleteHero = (id) => {
         request(`http://localhost:3001/heroes/${id}`, 'DELETE')
-        dispatch(removeHero(id))
+            .then(dispatch(removeHero(id)))
+/*             .catch(dispatch(heroesFetchingError))      */ 
     }
 
     const renderHeroesList = (arr) => {
