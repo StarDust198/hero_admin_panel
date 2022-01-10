@@ -26,7 +26,7 @@ const HeroesList = () => {
     const {request} = useHttp();
 
     useEffect(() => {
-        dispatch(heroesFetching());
+        dispatch('HEROES_FETCHING');
         request("http://localhost:3001/heroes")
             .then(data => dispatch(heroesFetched(data)))
             .catch(() => dispatch(heroesFetchingError()))
@@ -48,8 +48,6 @@ const HeroesList = () => {
     }
 
     const renderHeroesList = (arr) => {
-        console.log('render');
-
         if (arr.length === 0) {
             return (
                 <CSSTransition timeout={1000} classNames="hero-item" mountOnEnter>

@@ -1,8 +1,38 @@
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import heroes from '../reducers/heroes';
 import filters from '../reducers/filters';
 
-const store = createStore(combineReducers({heroes, filters}),   // Разбивание reducer на два файла для удобства
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const stringMiddleware = () => (next) => (action) => {  // аргумент первой функции - store === {dispatch, getState}
+    if (typeof action === 'string') {
+        return next({
+            type: action
+        })
+    }
+    return next(action)
+}
+
+const enhancer = (createStore) => (...args) => {
+    const store = createStore(...args);
+
+    const oldDispatch = store.dispatch;
+    store.dispatch = (action) => {
+        if (typeof action === 'string') {
+            return oldDispatch({
+                type: action
+            })
+        }
+        return oldDispatch(action)
+    }
+    
+    return store;
+}
+
+const store = createStore(
+    combineReducers({heroes, filters}),
+    compose(
+        applyMiddleware(stringMiddleware), 
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    )
+)    
 
 export default store;
