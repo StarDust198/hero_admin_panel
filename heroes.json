@@ -17,12 +17,6 @@
       "name": "Морской герой",
       "description": "Как аквамен, но не из DC",
       "element": "water"
-    },
-    {
-      "name": "Земляной червь",
-      "description": "Дрожь земли",
-      "element": "earth",
-      "id": "0a59666d-7b5a-4def-901c-f706eeaadf21"
     }
   ],
   "filters": [
@@ -30,31 +24,31 @@
       "element": "all",
       "label": "Все",
       "id": 1,
-      "clazz": "outline-dark"
+      "clazz": "btn-outline-dark"
     },
     {
       "element": "fire",
       "label": "Огонь",
       "id": 2,
-      "clazz": "danger"
+      "clazz": "btn-danger"
     },
     {
       "element": "water",
       "label": "Вода",
       "id": 3,
-      "clazz": "primary"
+      "clazz": "btn-primary"
     },
     {
       "element": "wind",
       "label": "Ветер",
       "id": 4,
-      "clazz": "success"
+      "clazz": "btn-success"
     },
     {
       "element": "earth",
       "label": "Земля",
       "id": 5,
-      "clazz": "secondary"
+      "clazz": "btn-secondary"
     }
   ]
 }

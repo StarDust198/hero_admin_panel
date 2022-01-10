@@ -17,20 +17,23 @@ import { addHero } from '../../actions';
 // данных из фильтров
 
 const HeroesAddForm = () => {
-    const {filters} = useSelector(state => state);
+    const {filters, filtersLoadingStatus} = useSelector(state => state);
     const dispatch = useDispatch();
     const {request} = useHttp();
 
     const createHero = async(values) => {
         values.id = uuidv4()
         await request(`http://localhost:3001/heroes/`, 'POST', JSON.stringify(values))
-            .then(dispatch(addHero(values))) 
+            .then(dispatch(addHero(values)))
+            .catch(console.log)
     }
 
-    const renderOptions = (arr) => {
-        if (arr.length === 0) {
+    const renderOptions = (arr, status) => {
+        if (status === 'loading') {
             return <option value="">Идёт загрузка...</option>
-        }        
+        } else if (status === 'error') {
+            return <option>Ошибка загрузки..</option>
+        }
 
         return arr
             .map(({id, element, label}) => {
@@ -42,7 +45,7 @@ const HeroesAddForm = () => {
             })
     }
     
-    const options = (renderOptions(filters))
+    const options = (renderOptions(filters, filtersLoadingStatus))
 
     return (
         <Formik
@@ -121,11 +124,6 @@ const HeroesAddForm = () => {
                             onBlur={handleBlur}
                             value={values.element}>
                                 {options}
-                            {/* <option value="">Я владею элементом...</option>
-                            <option value="fire">Огонь</option>
-                            <option value="water">Вода</option>
-                            <option value="wind">Ветер</option>
-                            <option value="earth">Земля</option> */}
                         </select>
                         {errors.element && touched.element && errors.element}
                     </div>

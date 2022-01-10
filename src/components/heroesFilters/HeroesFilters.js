@@ -36,11 +36,13 @@ const HeroesFilters = () => {
     }
 
     const renderFiltersList = (arr) => {
+        if (arr.length === 0) {
+            return <h5 className="text-center mt-5">Фильтры не найдены</h5>
+        }
+
         return arr.map(({id, clazz, label, element}) => {
-            const btnClass= classNames({
-                btn: true,
-                [`btn-${clazz}`]: true,
-                active: element === filterActive
+            const btnClass= classNames('btn', `${clazz}`, {
+                'active': element === filterActive
             })
 
             return <button 
@@ -53,12 +55,13 @@ const HeroesFilters = () => {
         })
     }
 
+    const elements = renderFiltersList(filters)
     return (
         <div className="card shadow-lg mt-4">
             <div className="card-body">
                 <p className="card-text">Отфильтруйте героев по элементам</p>
                 <div className="btn-group">
-                    {renderFiltersList(filters)}
+                    {elements}
                 </div>
             </div>
         </div>
