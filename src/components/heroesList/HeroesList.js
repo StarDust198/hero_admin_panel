@@ -3,18 +3,25 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { createSelector } from 'reselect';
 
 import { heroesFetching, heroesFetched, heroesFetchingError, removeHero } from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 
-// Задача для этого компонента:
-// При клике на "крестик" идет удаление персонажа из общего состояния
-// Усложненная задача:
-// Удаление идет и с json файла при помощи метода DELETE
-
 const HeroesList = () => {
-    const {heroes, heroesLoadingStatus, filterActive} = useSelector(state => state);
+    const filteredHeroesSelector = createSelector(
+        (state) => state.filters.filterActive,
+        (state) => state.heroes.heroes,
+        (filter, heroes) => {
+            return filter === 'all' ? heroes : 
+                heroes.filter(hero => hero.element === filter)
+        }
+    )
+
+    const filteredHeroes = useSelector(filteredHeroesSelector)
+
+    const heroesLoadingStatus = useSelector(state => state.heroes.heroesLoadingStatus);
     const dispatch = useDispatch();
     const {request} = useHttp();
 
@@ -41,6 +48,8 @@ const HeroesList = () => {
     }
 
     const renderHeroesList = (arr) => {
+        console.log('render');
+
         if (arr.length === 0) {
             return (
                 <CSSTransition timeout={1000} classNames="hero-item" mountOnEnter>
@@ -50,7 +59,6 @@ const HeroesList = () => {
         }        
 
         return arr
-            .filter(hero => hero.element === filterActive || filterActive === 'all')
             .map(({id, ...props}) => {
                 return (
                     <CSSTransition key={id} timeout={1000} classNames="hero-item">
@@ -60,7 +68,7 @@ const HeroesList = () => {
             })
     }
 
-    const elements = renderHeroesList(heroes);
+    const elements = renderHeroesList(filteredHeroes);
 
     return (
         <TransitionGroup component="ul">
