@@ -23,6 +23,12 @@
       "description": "Морскому герою не сдобровать!",
       "element": "water",
       "id": "57eed6a8-c82c-4e61-b433-d9ebfe943e56"
+    },
+    {
+      "name": "Дьябло",
+      "description": "Открываю врата ада",
+      "element": "fire",
+      "id": "985276b5-453c-48d0-b08a-56604cb2f243"
     }
   ],
   "filters": [
