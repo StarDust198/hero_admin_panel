@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 
-import { fetchFilters, changeActiveFilter } from '../../actions';
+import { fetchFilters } from '../../actions';
+import { changeActiveFilter } from './filtersSlice';
 import Spinner from '../spinner/Spinner';
 
 var classNames = require('classnames');

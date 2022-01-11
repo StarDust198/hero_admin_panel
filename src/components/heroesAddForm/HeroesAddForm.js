@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import { v4 as uuidv4 } from 'uuid';
 
-import { addHero } from '../../actions';
+import { addHero } from '../heroesList/heroesSlice';
 
 const HeroesAddForm = () => {
     const {filters, filtersLoadingStatus} = useSelector(state => state.filters);
