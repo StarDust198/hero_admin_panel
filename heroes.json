@@ -29,6 +29,18 @@
       "description": "Открываю врата ада",
       "element": "fire",
       "id": "985276b5-453c-48d0-b08a-56604cb2f243"
+    },
+    {
+      "name": "Дурак",
+      "description": "Борюсь с ветром",
+      "element": "wind",
+      "id": "5dddeb60-3d45-494b-bd68-e7f65efa9b80"
+    },
+    {
+      "name": "Земляной червь",
+      "description": "Ползать под землей и жрать харвестеры",
+      "element": "earth",
+      "id": "a0deeba0-25fa-4554-91b5-8b6d42562780"
     }
   ],
   "filters": [
