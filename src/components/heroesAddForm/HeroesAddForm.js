@@ -58,7 +58,6 @@ const HeroesAddForm = () => {
                 return errors;
             }}
             onSubmit={(values, { resetForm, setSubmitting }) => {
-                values.id = uuidv4()
                 createHero(values)
                     .then(() => {
                         resetForm()
