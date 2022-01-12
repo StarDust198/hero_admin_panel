@@ -29,6 +29,12 @@
       "description": "Ползать под землей и жрать харвестеры",
       "element": "earth",
       "id": "a0deeba0-25fa-4554-91b5-8b6d42562780"
+    },
+    {
+      "name": "Дьябло",
+      "description": "Открываю врата ада!",
+      "element": "fire",
+      "id": "21ccb9a3-34de-4150-8667-4259f7e967f8"
     }
   ],
   "filters": [
