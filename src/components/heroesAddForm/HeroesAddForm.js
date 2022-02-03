@@ -1,43 +1,45 @@
-import {useHttp} from '../../hooks/http.hook';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMemo } from 'react';
 
 import { Formik } from 'formik';
 import { v4 as uuidv4 } from 'uuid';
 
-import { addHero } from '../heroesList/heroesSlice';
-import { selectAll } from '../heroesFilters/filtersSlice';
+import { useAddHeroMutation, useGetFiltersQuery } from '../../api/apiSlice';
 
 const HeroesAddForm = () => {
-    const {filtersLoadingStatus} = useSelector(state => state.filters);
-    const filters = useSelector(selectAll);
-    const dispatch = useDispatch();
-    const {request} = useHttp();
+    const {
+        data: filters = [],
+        isLoading,
+        isError
+    } = useGetFiltersQuery() 
+
+    const [ addHero ] = useAddHeroMutation()
 
     const createHero = async(values) => {
         values.id = uuidv4()
-        await request(`http://localhost:3001/heroes/`, 'POST', JSON.stringify(values))
-            .then(dispatch(addHero(values)))
-            .catch(console.log)
+        try {
+            await addHero(values).unwrap()
+        } catch (err) {
+            console.error('Failed to save the hero, error: ', err)
+        }
     }
 
-    const renderOptions = (arr, status) => {
-        if (status === 'loading') {
+    const renderOptions = useMemo(() => {
+        if (isLoading) {
             return <option value="">Идёт загрузка...</option>
-        } else if (status === 'error') {
+        } else if (isError) {
             return <option>Ошибка загрузки..</option>
         }
 
-        return arr
-            .map(({id, element, label}) => {
-                if (element === 'all') {
-                    return <option key={id} value="">Я владею элементом...</option>
-                } else {
-                    return <option value={element} key={id}>{label}</option>
-                }                
-            })
-    }
+        return filters.map(({id, element, label}) => {
+            if (element === 'all') {
+                return <option key={id} value="">Я владею элементом...</option>
+            } else {
+                return <option value={element} key={id}>{label}</option>
+            }                
+        })
+    }, [filters, isLoading, isError])
     
-    const options = (renderOptions(filters, filtersLoadingStatus))
+    const options = (renderOptions)
 
     return (
         <Formik

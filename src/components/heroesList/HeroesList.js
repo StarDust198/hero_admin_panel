@@ -1,39 +1,39 @@
-import {useHttp} from '../../hooks/http.hook';
-import { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-import { removeHero, fetchHeroes, filteredHeroesSelector } from './heroesSlice';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 
+import { useGetHeroesQuery, useRemoveHeroMutation } from '../../api/apiSlice';
+
 const HeroesList = () => {
-    const filteredHeroes = useSelector(filteredHeroesSelector)
+    const activeFilter = useSelector(state => state.filters.filterActive)
 
-    const heroesLoadingStatus = useSelector(state => state.heroes.heroesLoadingStatus);
-    const dispatch = useDispatch();
-    const {request} = useHttp();
+    const {
+        data: heroes = [],
+        isLoading,
+        isError,
+        error
+    } = useGetHeroesQuery() 
+    
+    const [ removeHero ] = useRemoveHeroMutation()
 
-    useEffect(() => {
-        dispatch(fetchHeroes());
-
-        // eslint-disable-next-line
-    }, []);    
+    const filteredHeroes = useMemo(() => {
+        return heroes.filter(hero => activeFilter === 'all' || hero.element === activeFilter)
+    }, [heroes, activeFilter])
 
     // Передающуюся вниз функцию надо оборачивать в useCallback
     const deleteHero = useCallback((id) => {
-        request(`http://localhost:3001/heroes/${id}`, 'DELETE')
-            .then(dispatch(removeHero(id)))
-            .catch(console.log)
-
+        removeHero(id).unwrap().catch(console.log)
         // eslint-disable-next-line
-    }, [request])
+    }, [])
 
-    if (heroesLoadingStatus === "loading") {
+    if (isLoading) {
         return <Spinner/>;
-    } else if (heroesLoadingStatus === "error") {
-        return <h5 className="text-center mt-5">Ошибка загрузки</h5>
+    } else if (isError) {
+        return <h5 className="text-center mt-5">Ошибка загрузки: {error}</h5>
     }
 
     const renderHeroesList = (arr) => {

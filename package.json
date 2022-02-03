@@ -22,7 +22,7 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "start": "concurrently \"react-scripts start\" \"npx json-server heroes.json --port 3001\"",
+    "start": "concurrently \"react-scripts start\" \"npx json-server heroes.json --delay 500 --port 3001\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

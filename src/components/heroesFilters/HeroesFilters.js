@@ -1,27 +1,28 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux'
 
-import { changeActiveFilter, fetchFilters, selectAll } from './filtersSlice';
+import { changeActiveFilter } from './filtersSlice';
 import Spinner from '../spinner/Spinner';
+import classNames from 'classnames';
 
-var classNames = require('classnames');
+import { useGetFiltersQuery } from '../../api/apiSlice'
 
 const HeroesFilters = () => {
-    const {filtersLoadingStatus, filterActive} = useSelector(state => state.filters);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
 
-    const filters = useSelector(selectAll)
+    const activeFilter = useSelector(state => state.filters.filterActive)
 
-    useEffect(() => {
-        dispatch(fetchFilters());
+    const {
+        data: filters = [],
+        isLoading,
+        isError,
+        error
+    } = useGetFiltersQuery() 
 
-        // eslint-disable-next-line
-    }, []);
-
-    if (filtersLoadingStatus === "loading") {
+    if (isLoading) {
         return <Spinner/>;
-    } else if (filtersLoadingStatus === "error") {
-        return <h5 className="text-center mt-5">Ошибка загрузки</h5>
+    } else if (isError) {
+        return <h5 className="text-center mt-5">Ошибка загрузки: {error}</h5>
     }
 
     const renderFiltersList = (arr) => {
@@ -31,7 +32,7 @@ const HeroesFilters = () => {
 
         return arr.map(({id, clazz, label, element}) => {
             const btnClass= classNames('btn', `${clazz}`, {
-                'active': element === filterActive
+                'active': element === activeFilter
             })
 
             return <button 

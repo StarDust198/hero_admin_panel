@@ -35,6 +35,12 @@
       "description": "Открываю врата ада!",
       "element": "fire",
       "id": "21ccb9a3-34de-4150-8667-4259f7e967f8"
+    },
+    {
+      "name": "Ветренный чувак",
+      "description": "Борюсь с ветром по жизни",
+      "element": "wind",
+      "id": "c43d6f71-cc21-41ff-90cc-2b3b2999c307"
     }
   ],
   "filters": [

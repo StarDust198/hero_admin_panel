@@ -1,15 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import heroes from '../components/heroesList/heroesSlice';
 import filters from '../components/heroesFilters/filtersSlice';
+import { apiSlice } from '../api/apiSlice'
 
-const stringMiddleware = () => (next) => (action) => {  // аргумент первой функции - store === {dispatch, getState}
-    if (typeof action === 'string') {
-        return next({
-            type: action
-        })
-    }
-    return next(action)
-}
+// const stringMiddleware = () => (next) => (action) => {  // аргумент первой функции - store === {dispatch, getState}
+//     if (typeof action === 'string') {
+//         return next({
+//             type: action
+//         })
+//     }
+//     return next(action)
+// }
 
 // const store = createStore(
 //     combineReducers({heroes, filters}),
@@ -20,8 +20,11 @@ const stringMiddleware = () => (next) => (action) => {  // аргумент пе
 // )    
 
 const store = configureStore({
-    reducer: {heroes, filters},
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(stringMiddleware),
+    reducer: {
+        filters,
+        [apiSlice.reducerPath]: apiSlice.reducer
+    },
+    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(apiSlice.middleware),
     devTools: process.env.NODE_ENV !== 'production'    
 })
 
