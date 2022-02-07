@@ -3,7 +3,6 @@ import {
     createSelector,
     createEntityAdapter
 } from "@reduxjs/toolkit"
-import { useSelector } from "react-redux"
 
 import { apiSlice } from '../../api/apiSlice'
 

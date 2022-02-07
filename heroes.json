@@ -25,12 +25,6 @@
       "id": "57eed6a8-c82c-4e61-b433-d9ebfe943e56"
     },
     {
-      "name": "Земляной червь",
-      "description": "Ползать под землей и жрать харвестеры",
-      "element": "earth",
-      "id": "a0deeba0-25fa-4554-91b5-8b6d42562780"
-    },
-    {
       "name": "Дьябло",
       "description": "Открываю врата ада!",
       "element": "fire",
@@ -41,6 +35,18 @@
       "description": "Борюсь с ветром по жизни",
       "element": "wind",
       "id": "efc2189c-9572-48a0-9458-7d5d10623417"
+    },
+    {
+      "name": "Земляной червь",
+      "description": "Ползаю под землей и жру харвестеры",
+      "element": "earth",
+      "id": "296dabe8-8cf9-4638-86a2-916071d7f13c"
+    },
+    {
+      "name": "23123123",
+      "description": "123wadfasfasdasdasdad",
+      "element": "water",
+      "id": "b16c4ffc-3043-42d8-a4f0-fa8b8d28eefa"
     }
   ],
   "filters": [

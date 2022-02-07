@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { createSelector } from '@reduxjs/toolkit'
 
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
@@ -9,20 +10,28 @@ import { getActiveFilter } from '../heroesFilters/filtersSlice'
 import HeroesListItem from "../heroesListItem/HeroesListItem"
 import Spinner from '../spinner/Spinner'
 
-const HeroesList = () => {   
+const HeroesList = () => {
     const activeFilter = useSelector(getActiveFilter)
 
+    const selectFilteredHeroes = useMemo(() => {
+        return createSelector(
+            res => res.data,
+            data => data?.filter(hero => activeFilter === 'all' || hero.element === activeFilter) ||  []
+        )
+    }, [activeFilter])
+
     const {
-        data: heroes = [],
         isLoading,
-        isError
-    } = useGetHeroesQuery() 
+        isError,
+        filteredHeroes
+    } = useGetHeroesQuery(undefined,  {
+        selectFromResult: result => ({
+            ...result,
+            filteredHeroes: selectFilteredHeroes(result)
+        })
+    }) 
     
     const [ removeHero ] = useRemoveHeroMutation()
-
-    const filteredHeroes = useMemo(() => {
-        return heroes.filter(hero => activeFilter === 'all' || hero.element === activeFilter)
-    }, [heroes, activeFilter])
 
     // Передающуюся вниз функцию надо оборачивать в useCallback
     const deleteHero = useCallback((id) => {
@@ -37,6 +46,7 @@ const HeroesList = () => {
     }
 
     const renderHeroesList = (arr) => {
+        console.log('render');
         if (arr.length === 0) {
             return (
                 <CSSTransition timeout={1000} classNames="hero-item" mountOnEnter>
@@ -55,7 +65,7 @@ const HeroesList = () => {
             })
     }
 
-    const elements = renderHeroesList(filteredHeroes);
+    const elements = renderHeroesList(filteredHeroes)
 
     return (
         <TransitionGroup component="ul">

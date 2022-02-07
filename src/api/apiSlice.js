@@ -18,6 +18,18 @@ export const apiSlice = createApi({
                 method: 'POST',
                 body: newHero
             }),
+            async onQueryStarted(newHero, { dispatch, queryFulfilled }) {
+                const addResult = dispatch(
+                    apiSlice.util.updateQueryData('getHeroes', undefined, draft => {
+                        draft.push(newHero)
+                    })
+                )
+                try{
+                    await queryFulfilled
+                } catch {
+                    addResult.undo()
+                }
+            },
             invalidatesTags: ['Hero']
         }),
         removeHero: builder.mutation({
@@ -25,6 +37,18 @@ export const apiSlice = createApi({
                 url: `heroes/${heroId}`,
                 method: 'DELETE'
             }),
+            async onQueryStarted(heroId, { dispatch, queryFulfilled }) {
+                const removeResult = dispatch(
+                    apiSlice.util.updateQueryData('getHeroes', undefined, draft => {
+                        return draft.filter(hero => hero.id !== heroId )
+                    })
+                )
+                try{
+                    await queryFulfilled
+                } catch {
+                    removeResult.undo()
+                }
+            },
             invalidatesTags: ['Hero']            
         })
         // For future builders
