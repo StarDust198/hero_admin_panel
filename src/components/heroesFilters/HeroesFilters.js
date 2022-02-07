@@ -2,32 +2,19 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux'
 
 import { changeActiveFilter } from './filtersSlice';
-import Spinner from '../spinner/Spinner';
 import classNames from 'classnames';
 
-import { useGetFiltersQuery } from '../../api/apiSlice'
+import { selectAllFilters } from './filtersSlice'
 
 const HeroesFilters = () => {
     const dispatch = useDispatch()
 
-    const activeFilter = useSelector(state => state.filters.filterActive)
-
-    const {
-        data: filters = [],
-        isLoading,
-        isError,
-        error
-    } = useGetFiltersQuery() 
-
-    if (isLoading) {
-        return <Spinner/>;
-    } else if (isError) {
-        return <h5 className="text-center mt-5">Ошибка загрузки: {error}</h5>
-    }
+    const activeFilter = useSelector(state => state.filter.activeFilter)
+    const filters = useSelector(selectAllFilters)
 
     const renderFiltersList = (arr) => {
         if (arr.length === 0) {
-            return <h5 className="text-center mt-5">Фильтры не найдены</h5>
+            return <h5 className="text-center mt-1">Фильтров пока нет..</h5>
         }
 
         return arr.map(({id, clazz, label, element}) => {

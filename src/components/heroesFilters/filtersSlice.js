@@ -1,56 +1,56 @@
-import { createSlice, createAsyncThunk, createEntityAdapter } from "@reduxjs/toolkit";
-import { useHttp } from "../../hooks/http.hook";
+import {
+    createSlice,
+    createSelector,
+    createEntityAdapter
+} from "@reduxjs/toolkit"
+import { useSelector } from "react-redux"
+
+import { apiSlice } from '../../api/apiSlice'
+
+const filterSlice = createSlice({
+    name: 'activeFilter',
+    initialState: {
+        activeFilter: 'all'
+    },
+    reducers: {
+        changeActiveFilter: (state, action) => {
+            state.activeFilter = action.payload
+        }
+    }
+})
 
 const filtersAdapter = createEntityAdapter()
 
-// const initialState = {
-//     filters: [],
-//     filtersLoadingStatus: 'idle',
-//     filterActive: 'all'
-// }
+const initialState = filtersAdapter.getInitialState()
 
-const initialState = filtersAdapter.getInitialState({
-    filtersLoadingStatus: 'idle',
-    filterActive: 'all'
+export const extendedApiSlice = apiSlice.injectEndpoints({
+    endpoints: builder => ({
+        getFilters: builder.query({
+            query: () => 'filters',
+            transformResponse: responseData => {
+                return filtersAdapter.setAll(initialState, responseData)
+            }
+        })
+    })
 })
 
-export const fetchFilters = createAsyncThunk(
-    'filters/fetchFilters',
-    async() => {
-        const {request} = useHttp()
-        return await request("http://localhost:3001/filters")
-    }
+export const { useGetFiltersQuery } = extendedApiSlice
+
+export const selectFiltersResult = apiSlice.endpoints.getFilters.select()
+
+const selectFiltersData = createSelector(
+    selectFiltersResult,
+    filtersResult => filtersResult.data
 )
 
-const filtersSlice = createSlice({
-    name: 'filters',
-    initialState,
-    reducers: {
-        changeActiveFilter: (state, action) => {
-            state.filterActive = action.payload
-        }
-    },
-    extraReducers: (builder) => {
-        builder
-            .addCase(fetchFilters.pending, state => {
-                state.filtersLoadingStatus = 'loading'
-            })
-            .addCase(fetchFilters.fulfilled, (state, action) => {
-                state.filtersLoadingStatus = 'idle'
-                filtersAdapter.setAll(state, action.payload)
-            })
-            .addCase(fetchFilters.rejected, state => {
-                state.filtersLoadingStatus = 'error'
-            })
-            .addDefaultCase(() => {})
-    }
-})
+export const { selectAll: selectAllFilters } =
+  filtersAdapter.getSelectors(state => selectFiltersData(state) ?? initialState)
 
-const {actions, reducer} = filtersSlice;
+const { actions, reducer } = filterSlice;
 
 export default reducer
 
-export const {selectAll} = filtersAdapter.getSelectors(state => state.filters)
+export const getActiveFilter = state => state.filter.activeFilter
 
 export const {
     changeActiveFilter

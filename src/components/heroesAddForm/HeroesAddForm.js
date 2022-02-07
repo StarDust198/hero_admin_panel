@@ -1,16 +1,14 @@
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 import { Formik } from 'formik';
 import { v4 as uuidv4 } from 'uuid';
 
-import { useAddHeroMutation, useGetFiltersQuery } from '../../api/apiSlice';
+import { useAddHeroMutation } from '../../api/apiSlice';
+import { selectAllFilters } from '../heroesFilters/filtersSlice';
 
 const HeroesAddForm = () => {
-    const {
-        data: filters = [],
-        isLoading,
-        isError
-    } = useGetFiltersQuery() 
+    const filters = useSelector(selectAllFilters)
 
     const [ addHero ] = useAddHeroMutation()
 
@@ -24,10 +22,8 @@ const HeroesAddForm = () => {
     }
 
     const renderOptions = useMemo(() => {
-        if (isLoading) {
-            return <option value="">Идёт загрузка...</option>
-        } else if (isError) {
-            return <option>Ошибка загрузки..</option>
+        if (!filters.length) {            
+            return <option value="">Фильтров пока нет..</option>
         }
 
         return filters.map(({id, element, label}) => {
@@ -37,7 +33,7 @@ const HeroesAddForm = () => {
                 return <option value={element} key={id}>{label}</option>
             }                
         })
-    }, [filters, isLoading, isError])
+    }, [filters])
     
     const options = (renderOptions)
 

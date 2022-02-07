@@ -7,7 +7,10 @@ export const apiSlice = createApi({
     endpoints: builder => ({
         getHeroes: builder.query({
             query: () => 'heroes',
-            providesTags: ['Hero']
+            providesTags: (result = [], error, arg) => [
+                'Hero',
+                ...result.map(({ id }) => ({ type: 'Hero', id }))
+            ]
         }), 
         addHero: builder.mutation({
             query: newHero => ({
@@ -22,17 +25,15 @@ export const apiSlice = createApi({
                 url: `heroes/${heroId}`,
                 method: 'DELETE'
             }),
-            invalidatesTags: ['Hero']
-        }),
-        getFilters: builder.query({
-            query: () => 'filters'
+            invalidatesTags: ['Hero']            
         })
+        // For future builders
+        // invalidatesTags: (result, error, arg) => [{ type: 'Hero', id: arg }]
     })
 })
 
 export const {
     useGetHeroesQuery,
     useAddHeroMutation,
-    useRemoveHeroMutation,
-    useGetFiltersQuery
+    useRemoveHeroMutation
 } = apiSlice

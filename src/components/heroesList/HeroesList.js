@@ -1,21 +1,21 @@
-import { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useCallback, useMemo } from 'react'
+import { useSelector } from 'react-redux'
 
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
-import HeroesListItem from "../heroesListItem/HeroesListItem";
-import Spinner from '../spinner/Spinner';
+import { useGetHeroesQuery, useRemoveHeroMutation } from '../../api/apiSlice'
+import { getActiveFilter } from '../heroesFilters/filtersSlice'
 
-import { useGetHeroesQuery, useRemoveHeroMutation } from '../../api/apiSlice';
+import HeroesListItem from "../heroesListItem/HeroesListItem"
+import Spinner from '../spinner/Spinner'
 
-const HeroesList = () => {
-    const activeFilter = useSelector(state => state.filters.filterActive)
+const HeroesList = () => {   
+    const activeFilter = useSelector(getActiveFilter)
 
     const {
         data: heroes = [],
         isLoading,
-        isError,
-        error
+        isError
     } = useGetHeroesQuery() 
     
     const [ removeHero ] = useRemoveHeroMutation()
@@ -33,7 +33,7 @@ const HeroesList = () => {
     if (isLoading) {
         return <Spinner/>;
     } else if (isError) {
-        return <h5 className="text-center mt-5">Ошибка загрузки: {error}</h5>
+        return <h5 className="text-center mt-5">Ошибка загрузки..</h5>
     }
 
     const renderHeroesList = (arr) => {
